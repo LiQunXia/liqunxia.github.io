@@ -1,30 +1,28 @@
 name: Upload File and Deploy to GitHub Pages
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: 记录当前推送commit的时间以及commit hash值
-              run: | 
-                echo "::set-env name=COMMIT_TIME::$(date +'%Y-%m-%d %H:%M:%S')"
-                echo "::set-env name=COMMIT_HASH::$(git rev-parse HEAD)"
+      - name: 记录当前推送commit的时间以及commit hash值
+        run: |
+          echo "COMMIT_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-    
-            - name: update github page 
-              run: |
-                echo "current push time is $COMMIT_TIME, current commit hash is $COMMIT_HASH" >> ./docs/index.md
-                git config --global user.email "xia@test.com"
-                git config --global user.name "xia"
-                git add .
-                git commit -m "update index.md"
-                git push
+      - name: update github page
+        run: |
+          echo "current push time is $COMMIT_TIME, current commit hash is $COMMIT_HASH" >> ./docs/index.md
+          git config --global user.email "xia@test.com"
+          git config --global user.name "xia"
+          git add .
+          git commit -m "update index.md"
+          git push
