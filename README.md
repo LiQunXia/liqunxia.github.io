@@ -1,3 +1,3 @@
 # liqunxia.github.io
 
-a personal website for distribtution of my works and projects.
+a personal website for distribution of my works and projects.
