@@ -1,0 +1,44 @@
+name: Upload File and Deploy to GitHub Pages
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: use ssh-key agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.XIA_TEST_ACTION_PRIVATE_KEY }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.XIA_TEST_ACTION_PRIVATE_KEY }}
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: my-artifact
+          path: mock_artifact.md
+
+      - name: output artifact url
+        run: |
+          echo "DOWNLOAD_URL: ${{ steps.artifact-upload-step.outputs.artifact-url }}"
+
+      - name: 记录当前推送commit的时间以及commit hash值 上传文件的下载url
+        run: |
+          echo "COMMIT_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "DOWNLOAD_URL=${{ steps.artifact-upload-step.outputs.artifact-url }}" >> $GITHUB_ENV
+
+      - name: update github page
+        run: |
+          echo "\ncurrent push time is $COMMIT_TIME, current commit hash is $COMMIT_HASH, download url is $DOWNLOAD_URL" >> ./docs/index.md
+          git config --global user.email "xia@test.com"
+          git config --global user.name "xia"
+          git add .
+          git commit -m "update index.md"
+          git push
