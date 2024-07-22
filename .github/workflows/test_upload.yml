@@ -1,6 +1,8 @@
 name: Upload File and Deploy to GitHub Pages
 
-on: workflow_dispatch
+on:
+  repository_dispatch:
+    types: [test_upload]
 
 jobs:
   deploy:
