@@ -38,9 +38,7 @@ jobs:
 
       - name: update github page
         run: |
-          echo "
-          current push time is $COMMIT_TIME, current commit hash is $COMMIT_HASH, download url is $DOWNLOAD_URL
-          " >> ./docs/index.md
+          echo "\ncurrent push time is $COMMIT_TIME, current commit hash is $COMMIT_HASH, download url is $DOWNLOAD_URL" >> ./docs/index.md
           git config --global user.email "xia@test.com"
           git config --global user.name "xia"
           git add .
